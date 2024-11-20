@@ -1,0 +1,22 @@
+﻿@model IEnumerable<Websitebansach.Models.DonHang>
+@{
+    ViewBag.Title = "ThongKeDoanhThu";
+    Layout = "~/Views/Layout/AdminLayout.cshtml";
+}
+<h2>Thống Kê Doanh Thu</h2>
+
+<form method="get" action="@Url.Action("ThongKeDoanhThu")">
+    <label for="startDate">Ngày bắt đầu:</label>
+    <input type="date" name="startDate" value="@ViewBag.StartDate" />
+
+    <label for="endDate">Ngày kết thúc:</label>
+    <input type="date" name="endDate" value="@ViewBag.EndDate" />
+
+    <button type="submit">Thống Kê</button>
+</form>
+
+<p>Tổng doanh thu từ @ViewBag.StartDate đến @ViewBag.EndDate: @ViewBag.DoanhThu VND</p>
+
+
+
+<a href="@Url.Action("Index", "QuanliDonHang")">Quay lại danh sách đơn hàng</a>

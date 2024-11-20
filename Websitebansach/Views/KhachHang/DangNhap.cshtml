@@ -1,0 +1,45 @@
+﻿@{
+    ViewBag.Title = "Đăng Nhập";
+    Layout = "~/Views/Layout/NguoidungLayout.cshtml";
+}
+
+<h2>Đăng Nhập</h2>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+}
+
+@using (Html.BeginForm("DangNhap", "KhachHang", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    <div class="form-horizontal">
+        
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <div class="form-group">
+            @Html.Label("TaiKhoan", "Tài khoản", new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextBox("TaiKhoan", "", new { @class = "form-control" })
+                @Html.ValidationMessage("TaiKhoan", "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.Label("MatKhau", "Mật khẩu", new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.Password("MatKhau", "", new { @class = "form-control" })
+                @Html.ValidationMessage("MatKhau", "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Đăng Nhập" class="btn btn-primary" />
+            </div>
+        </div>
+    </div>
+}
