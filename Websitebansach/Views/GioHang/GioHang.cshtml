@@ -46,13 +46,25 @@
     </tr>
     <tr>
         <td colspan="6" style="text-align:right; color: blue">
-            @using(Html.BeginForm("DatHang","GioHang"))
+            @using (Html.BeginForm("DatHang", "GioHang"))
             {
-                <input type="submit" style="cursor: pointer; width: 100px; height: 30px; background-color: #FF3333; color: white; " value="Đặt hàng" />
-            }
-        </td>
-    </tr>
-</table>
+        <tr>
+            <td colspan="6" style="text-align:right; color: blue">
+                @using (Html.BeginForm("DatHang", "GioHang", FormMethod.Post))
+                {
+                    <div style="margin-bottom: 10px;">
+                        <label><input type="radio" name="PaymentMethod" value="COD" checked /> Thanh toán khi nhận hàng</label><br />
+                        <label><input type="radio" name="PaymentMethod" value="Online" /> Thanh toán online</label>
+                    </div>
+                    <input type="submit" style="cursor: pointer; width: 100px; height: 30px; background-color: #FF3333; color: white;" value="Đặt hàng" />
+                }
+            </td>
+        </tr>
+
+    }
+            </td>
+            </tr>
+        </table>
 @*Css giỏ hàng*@
 <style>
     #divGioHang {

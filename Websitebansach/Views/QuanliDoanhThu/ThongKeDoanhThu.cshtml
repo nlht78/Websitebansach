@@ -15,8 +15,11 @@
     <button type="submit">Thống Kê</button>
 </form>
 
-<p>Tổng doanh thu từ @ViewBag.StartDate đến @ViewBag.EndDate: @ViewBag.DoanhThu VND</p>
+<p>
+    <strong>Tổng doanh thu:</strong> @ViewBag.DoanhThu VND<br />
+    <strong>Tổng số đơn hàng:</strong> @ViewBag.TongSoDonHang<br />
+    <strong>Tổng số lượng sách bán được:</strong> @ViewBag.TongSoLuongSach
+</p>
 
-
-
-<a href="@Url.Action("Index", "QuanliDonHang")">Quay lại danh sách đơn hàng</a>
+<a class="btn btn-primary" href="@Url.Action("XuatBaoCaoCSV", new { startDate = ViewBag.StartDate, endDate = ViewBag.EndDate })">Xuất Báo Cáo CSV</a>
+<a class="btn btn-success" href="@Url.Action("XuatBaoCaoExcel", new { startDate = ViewBag.StartDate, endDate = ViewBag.EndDate })">Xuất Báo Cáo Excel</a>

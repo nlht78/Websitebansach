@@ -15,11 +15,17 @@
 @if (TempData["SuccessMessage"] != null)
 {
     <div id="notification" style="color: green;">@TempData["SuccessMessage"]</div>
-    <script>setTimeout(function () {
+    <script>
+    setTimeout(function () {
             document.getElementById('notification').style.display = 'none';
         }, 5000); // Ẩn thông báo sau 5 giây</script>
 }
-
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["Message"]
+    </div>
+}
 @section Noidungbenphai {
     <div>
         Website bán sách
@@ -46,7 +52,7 @@
                         }
                     </div>
                 </div>
-               
+
             </a>
         </div>
         if (i % 4 == 0)

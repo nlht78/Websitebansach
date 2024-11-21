@@ -158,29 +158,44 @@ namespace Websitebansach.Controllers
         #region Đặt hàng
         //Xây dựng chức năng đặt hàng
         [HttpPost]
-        public ActionResult DatHang()
+        public ActionResult DatHang(string PaymentMethod)
         {
-            //Kiểm tra đăng nhập
+            // Kiểm tra đăng nhập
             if (Session["KhachHang"] == null || Session["KhachHang"].ToString() == "")
             {
                 return RedirectToAction("DangNhap", "KhachHang");
             }
-            //Kiểm tra giỏ hàng
+
+            // Kiểm tra giỏ hàng
             if (Session["GioHang"] == null)
             {
-                RedirectToAction("Index", "Home");
-            }    
-            //Thêm đơn hàng
+                return RedirectToAction("Index", "Home");
+            }
+
+            // Thêm đơn hàng
             DonHang ddh = new DonHang();
             KhachHang khachHang = (KhachHang)Session["KhachHang"];
-            List <GioHang> gh = LayGioHang();
+            List<GioHang> gh = LayGioHang();
             ddh.MaKH = khachHang.MaKH;
-            ddh.NgayDat=DateTime.Now;
+            ddh.NgayDat = DateTime.Now;
+
+            // Xử lý phương thức thanh toán
+            if (PaymentMethod == "COD")
+            {
+                ddh.TinhTrangGiaoHang = 0; // Chưa giao
+                ddh.DaThanhToan = 0; // Thanh toán khi nhận hàng
+            }
+            else if (PaymentMethod == "Online")
+            {
+                ddh.TinhTrangGiaoHang = 0; // Chưa giao
+                ddh.DaThanhToan = 1; // Thanh toán online
+            }
+
             db.DonHangs.Add(ddh);
             db.SaveChanges();
 
-            //Thêm chi tiết đơn hàng
-            foreach(var item in gh)
+            // Thêm chi tiết đơn hàng
+            foreach (var item in gh)
             {
                 ChiTietDonHang ctDH = new ChiTietDonHang();
                 ctDH.MaDonHang = ddh.MaDonHang;
@@ -190,9 +205,38 @@ namespace Websitebansach.Controllers
                 db.ChiTietDonHangs.Add(ctDH);
             }
             db.SaveChanges();
-            // Đặt thông báo vào TempData
-            return RedirectToAction("ThanhToan", new { maDonHang = ddh.MaDonHang });
+
+            // Điều hướng đến View xác nhận dựa trên phương thức thanh toán
+            if (PaymentMethod == "Online")
+            {
+                return RedirectToAction("ThanhToan", new { maDonHang = ddh.MaDonHang });
+            }
+            else
+            {
+                return RedirectToAction("XacNhanDonHang", new { maDonHang = ddh.MaDonHang });
+            }
         }
+
+        // Trang xác nhận đơn hàng
+        public ActionResult XacNhanDonHang(int maDonHang)
+        {
+            var donHang = db.DonHangs.SingleOrDefault(dh => dh.MaDonHang == maDonHang);
+            if (donHang == null)
+            {
+                return HttpNotFound();
+            }
+
+            // Đảm bảo `NgayDat` được khởi tạo hợp lệ (nếu cần)
+            if (donHang.NgayDat == null)
+            {
+                donHang.NgayDat = DateTime.Now; // Giá trị mặc định
+            }
+
+            return View(donHang);
+        }
+
+
+
 
         // Trang thanh toán
         public ActionResult ThanhToan(int maDonHang)
@@ -208,8 +252,8 @@ namespace Websitebansach.Controllers
             // Truyền thông tin sang View
             ViewBag.MaDonHang = donHang.MaDonHang;
             ViewBag.TongTien = tongTien;
-            ViewBag.TenTaiKhoan = "Nguyen Van A"; // Thông tin tài khoản mẫu
-            ViewBag.SoTaiKhoan = "1234567890";
+            ViewBag.TenTaiKhoan = "Nhom 10"; // Thông tin tài khoản mẫu
+            ViewBag.SoTaiKhoan = "1021096794";
             ViewBag.NganHang = "Vietcombank";
             ViewBag.NoiDungChuyenKhoan = $"MuaSach {donHang.MaDonHang}";
 
